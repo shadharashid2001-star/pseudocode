@@ -135,7 +135,129 @@ METHODS
 END METHOD  
 
 END METHOD
+------------------------------------------------
+Scenario 3: Restaurant Order
 
+
+CLASS Dish
+
+ATTRIBUTES
+PRIVATE ID : NUMBER
+PRIVATE Name : TEXT
+PRIVATE Price : NUMBER
+PRIVATE PrepTimeMinutes : NUMBER
+PRIVATE IsAvailable : BOOLEAN
+
+CONSTRUCTOR(I:NUMBER,N:TEXT,P:NUMBER,T:NUMBER,A:BOOLEAN)
+    SET ID TO I
+    SET Name TO N
+    SET Price TO P
+    SET PrepTimeMinutes TO T
+    SET IsAvailable TO A
+END CONSTRUCTOR
+
+METHODS
+
+GetDish()
+    DISPLAY Name
+END METHOD
+
+MarkUnavailable()
+    SET IsAvailable TO FALSE
+END METHOD
+
+END CLASS
+
+
+
+CLASS OrderItem
+
+ATTRIBUTES
+PRIVATE ID : NUMBER
+PRIVATE Quantity : NUMBER
+PRIVATE SpecialRequest : TEXT
+PRIVATE Dish : Dish
+
+CONSTRUCTOR(I:NUMBER,Q:NUMBER,S:TEXT,D:Dish)
+    SET ID TO I
+    SET Quantity TO Q
+    SET SpecialRequest TO S
+    SET Dish TO D
+END CONSTRUCTOR
+
+METHODS
+
+LineTotal()
+    SET Total TO Quantity * Dish.Price
+    DISPLAY Total
+END METHOD
+
+ChangeQuantity(Q:NUMBER)
+    SET Quantity TO Q
+END METHOD
+
+END CLASS
+
+
+
+CLASS Order
+
+ATTRIBUTES
+PRIVATE ID : NUMBER
+PRIVATE TableNumber : NUMBER
+PRIVATE OpenedTime : TEXT
+PRIVATE IsPaid : BOOLEAN
+PRIVATE Items : LIST<OrderItem>
+
+CONSTRUCTOR(I:NUMBER,TN:NUMBER,OT:TEXT)
+    SET ID TO I
+    SET TableNumber TO TN
+    SET OpenedTime TO OT
+    SET IsPaid TO FALSE
+END CONSTRUCTOR
+
+METHODS
+
+AddItem(Item:OrderItem)
+    ADD Item TO Items
+END METHOD
+
+CalculateTotal()
+    SET Total TO 0
+
+    FOR EACH Item IN Items
+        SET Total TO Total + (Item.Quantity * Item.Dish.Price)
+    END FOR
+
+    DISPLAY Total
+END METHOD
+
+MarkAsPaid()
+    SET IsPaid TO TRUE
+END METHOD
+
+END CLASS
+
+
+
+START
+BEGIN
+
+CREATE OBJECT D1 OF Dish(11,"Chicken Biryani",3.5,20,TRUE)
+
+CREATE OBJECT I1 OF OrderItem(1,2,"No onions",Dish1)
+
+CREATE OBJECT O1 OF Order(1,7,"8:30 pm")
+
+O1.AddItem(Item1)
+
+I1.LineTotal()
+
+O1.CalculateTotal()
+
+O1.MarkAsPaid()
+
+END
 
 
 
